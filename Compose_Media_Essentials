@@ -1,0 +1,109 @@
+version: "3"
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}      
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG}sonarr:/config
+      - ${TV}
+      - ${DOWNLOADS}
+    ports:
+      - 8989:8989
+      
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG}radarr:/config
+      - ${MOVIES}
+      - ${DOWNLOADS}
+    ports:
+      - 7878:7878
+      
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG}sabnzdb:/config
+      - ${DOWNLOADS}
+    ports:
+      - 8080:8080
+      
+  deluge:
+    image: lscr.io/linuxserver/deluge
+    container_name: deluge
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DELUGE_LOGLEVEL=error #optional
+    volumes:
+      - ${CONFIG}deluge:/config
+      - ${DOWNLOADS}
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  overseerr:
+    image: lscr.io/linuxserver/overseerr
+    container_name: overseerr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG}overseerr:/app/config
+    ports:
+      - 5055:5055
+      
+  jackett:
+    image: lscr.io/linuxserver/jackett
+    container_name: jackett
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - AUTO_UPDATE=true
+    volumes:
+      - ${CONFIG}jackett:/config
+    ports:
+      - 9117:9117
+      
+  tautulli:
+    image: lscr.io/linuxserver/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG}tautulli:/config
+    ports:
+      - 8181:8181
+
+  watchtower:
+      image: containrrr/watchtower
+      container_name: watchtower
+      restart: unless-stopped
+      volumes:
+         - /var/run/docker.sock:/var/run/docker.sock

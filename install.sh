@@ -7,7 +7,7 @@ installApps()
     echo "This script will help you in installing the latest version of Docker-CE, Docker-Compose, and Portainer-CE."
     echo "Please select 'y' for the items you would like to install."
     echo "NOTE: Without Docker you cannot use Docker-Compose, or Portainer-CE."
-    echo "      You also must have Docker-Compose and Portainer for other apps to be installed."
+    echo "       You also must have Docker-Compose and Portainer for other apps to be installed."
     echo ""
     echo ""
     
@@ -73,7 +73,7 @@ startInstall()
 
     if [[ "$OS" != "1" ]]; then
         echo "    1. Installing System Updates. This may take a while."
-        (sudo apt update && sudo apt upgrade -y) > ~/docker-script-install.log 2>&1 &
+        (sudo apt update && sudo apt upgrade -y && sudo apt install lsb-core) > ~/docker-script-install.log 2>&1 &
         ## Show a spinner for activity progress
         pid=$! # Process Id of the previous running command
         spin='-\|/'
@@ -135,6 +135,7 @@ startInstall()
         if [[ "$DOCK" == [yY] ]]; then
             echo "    1. Updating System Packages."
             sudo yum install curl
+            sudo yum install redhat-lsb-core
             sudo yum check-update >> ~/docker-script-install.log 2>&1
 
             echo "    2. Installing Docker-CE (Community Edition)."
@@ -183,6 +184,8 @@ startInstall()
         echo "    2. Installing Docker-CE (Community Edition)..."
             sleep 2s
 
+            sudo pacman -Syu lsb-release
+            
             curl -fsSL https://get.docker.com | sh >> ~/docker-script-install.log 2>&1
 
             echo "    - docker-ce version is now:"
@@ -242,10 +245,17 @@ startInstall()
         ######################################
 
         if [[ "$OS" == "1" ]]; then
+            sudo yum update -y
+            sudo yum upgrade
+            sudo yum install curl
             COMPOSE_VERSION=`git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oE "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1`
-            sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose" >> ~/docker-script-install.log 2>&1
+            sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-            sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose" >> ~/docker-script-install.log 2>&1        
+
+        #    COMPOSE_VERSION=`git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oE "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1`
+        #    sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose" >> ~/docker-script-install.log 2>&1
+        #    sudo chmod +x /usr/local/bin/docker-compose
+        #    sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose" >> ~/docker-script-install.log 2>&1        
             
         fi
 
@@ -261,7 +271,7 @@ startInstall()
         echo ""
 
         echo "- Docker Compose Version is now: " 
-        docker-compose --version
+        docker compose version
         echo ""
         echo ""
         sleep 3s

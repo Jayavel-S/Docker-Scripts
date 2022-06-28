@@ -1,5 +1,3 @@
-#!/bin/bash
-
 echo "This script will help you in installing the latest version of docker and docker-compose along with media applications in Ubuntu"
 echo ""
 echo "You appear to be running the following distribution:"
@@ -16,6 +14,7 @@ echo ""
 sudo true
 
 echo "  Installing System Updates. This may take a while."
+            export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt upgrade -y
                 
 echo "  Installing Docker (Community Edition)."
@@ -66,11 +65,7 @@ echo "  1. Pulling the docker-compose.yml file."
         sudo mkdir /home/downloads -p
         sudo mkdir /home/downloads/tv -p
         sudo mkdir /home/downloads/movies -p
-        sudo mkdir -p docker/essentials_applications
-        cd docker/essentials_applications
-
-        curl https://github.com/Jayavel-S/Docker-Scripts/blob/main/Compose_Media_Essentials.yml -o docker-compose.yml >> ~/docker-script-install.log 2>&1
-
+              
         echo "    2. Running the docker-compose.yml to install and start the applications"
 
         sudo docker-compose up -d

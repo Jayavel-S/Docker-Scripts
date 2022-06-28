@@ -2,10 +2,10 @@ echo "This script will help you in installing the latest version of docker and d
 echo ""
 echo "You appear to be running the following distribution:"
 echo ""
-echo " " $(lsb_release -i)
-echo " " $(lsb_release -d)
-echo " " $(lsb_release -r)
-echo " " $(lsb_release -c)
+echo " " "$(lsb_release -i)"
+echo " " "$(lsb_release -d)"
+echo " " "$(lsb_release -r)"
+echo " " "$(lsb_release -c)"
 echo ""
 echo "------------------------------------------------"
 echo ""
@@ -26,7 +26,7 @@ echo "  Installing Docker (Community Edition)."
         sleep 2s
 
 # Adding User Permissions
-            sudo usermod -aG docker ${USER}
+            sudo usermod -aG docker "${USER}"
 
 # Enabling docker to start automatically on hardware reboot            
             sudo systemctl enable docker

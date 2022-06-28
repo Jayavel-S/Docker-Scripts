@@ -108,20 +108,17 @@ services:
       volumes:
          - /var/run/docker.sock:/var/run/docker.sock
   
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin
-    container_name: jellyfin
+  plex:
+    image: lscr.io/linuxserver/plex
+    container_name: plex
+    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=${TZ}
+      - VERSION=docker
+#      - PLEX_CLAIM= #optional
     volumes:
-      - ${CONFIG}jellyfin:/config
-      - ${TV}:/data/tvshows
-      - ${MOVIES}:/data/movies
-    ports:
-      - 8096:8096
-      - 8920:8920 #optional
-      - 7359:7359/udp #optional
-      - 1900:1900/udp #optional
+      - ${CONFIG}plex:/config
+      - ${TV}:/tv
+      - ${MOVIES}:/movies
     restart: unless-stopped

@@ -21,7 +21,7 @@ The list of apps that will be automatically installed are:
  
        ![git version](https://user-images.githubusercontent.com/101336634/158008355-768918e3-7ced-462f-9a9f-e52e539c875b.png)
     
-    If you do not have git installed, you can use the command `sudo apt install git` to install the latest version of git in your system.
+    If you do not have git installed, you can use the command `sudo apt update && sudo apt install git` to install the latest version of git in your system.
     
  3. You need to know the PUID and PGID values for the current user. You can get that by running `id` and looking at the first two values. It will most likely be 1000,1000 or 1001,1001 unless you have some special purpose distros.
  
